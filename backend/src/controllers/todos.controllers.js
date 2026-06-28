@@ -55,7 +55,28 @@ export const updateTodos = async(req,res) => {
         })
         
     } catch (error) {
-        console.error("Error in creating Todo ", error);
+        console.error("Error in updating Todo ", error);
+        res.status(500).json({
+            message:"Internal server error"
+        })
+    }
+}
+
+
+export const deleteTodos = async (req,res) => {
+    try {
+        const id = req.params.id;
+        const todoFound = await Todo.findByIdAndDelete(id);
+        if(!todoFound){
+            return res.status(404).json({
+                message:"Todo not found"
+            })
+        }
+        res.status(200).json({
+            message:"Todo deleted successfully"
+        })
+    } catch (error) {
+        console.error("Error in deleting Todo ", error);
         res.status(500).json({
             message:"Internal server error"
         })
