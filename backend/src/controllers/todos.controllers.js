@@ -28,3 +28,36 @@ export const createTodos = async(req,res) => {
         })
     }
 }
+
+export const updateTodos = async(req,res) => {
+    try {
+        const {title,completed}=req.body;
+        const id = req.params.id;
+        if(!title || !completed===undefined){
+            return res.status(403).json({
+                message:"Enough data not provided"
+            })
+        }
+        const todoFound = await Todo.findByIdAndUpdate(id,{
+            title,
+            completed
+        }, {
+            new:true
+        })
+        if(!todoFound){
+            return res.status(404).json({
+                message:"Todo not found"
+            })
+        }
+        res.status(200).json({
+            message:"todo updated successfully",
+            updatedTodo:todoFound
+        })
+        
+    } catch (error) {
+        console.error("Error in creating Todo ", error);
+        res.status(500).json({
+            message:"Internal server error"
+        })
+    }
+}
